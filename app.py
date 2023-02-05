@@ -1,7 +1,7 @@
 import mariadb
-from flask import Flask
+# from flask import Flask
 import dbcreds
-import json
+# import json
 
 conn = mariadb.connect(
             user=dbcreds.user,
@@ -12,8 +12,21 @@ conn = mariadb.connect(
             autocommit = True
             )
 
-app = Flask(__name__)
+cursor = conn.cursor()
+# app = Flask(__name__)
 
+def get_animals():
+    cursor.execute("CALL get_animals")
+    result = cursor.fetchall()
+    print(result)
 
+def add_animals():
+    name = input("name_input:\n")
+    cursor.execute("CALL add_animals(?)",[name])
+    cursor.execute("CALL get_animals")
+    result = cursor.fetchall()
+    print(result)
 
-app.run(debug=True)
+get_animals()
+add_animals()
+# app.run(debug=True)
