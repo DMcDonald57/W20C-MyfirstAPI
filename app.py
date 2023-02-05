@@ -21,12 +21,20 @@ def get_animals():
     print(result)
 
 def add_animals():
-    name = input("name_input:\n")
+    name = input("Animal to add:\n")
     cursor.execute("CALL add_animals(?)",[name])
+    cursor.execute("CALL get_animals")
+    result = cursor.fetchall()
+    print(result)
+
+def remove_animals():
+    name = input("Animal to remove:\n")
+    cursor.execute("CALL remove_animals(?)",[name])
     cursor.execute("CALL get_animals")
     result = cursor.fetchall()
     print(result)
 
 get_animals()
 add_animals()
+remove_animals()
 # app.run(debug=True)
