@@ -1,15 +1,42 @@
 from flask import Flask
 import json
-from dbhelpers import run_statement
+# from dbhelpers import run_statement
+
+# try this as there is a problem with my dbhelpers
+import mariadb
+import dbcreds
+conn = mariadb.connect(
+                user=dbcreds.user,
+                password=dbcreds.password,
+                host=dbcreds.host,
+                port=dbcreds.port,
+                database=dbcreds.database
+)
+
+cursor = conn.cursor()
+# to here
 
 app = Flask(__name__)
 
 @app.get('/animals')
 def get_animals():
-    results = run_statement('CALL get_animals(?)',[])
+    cursor.execute('CALL get_animals')
+    results = cursor.fetchall()
     if(type(results) == list):
         get_animals_json = json.dumps(results, default=str)
         return get_animals_json
+    else:
+        return 'There was an error'
+
+@app.post('/animals')
+def add_animals(request):
+    input = request.get_json(name)
+    name = input['name']
+    cursor.execute('CALL add_animals(?)',[name])
+    results = cursor.fetchall()
+    if(type(results) == list):
+        add_animals_json = json.dumps(results, default=str)
+        return add_animals_json
     else:
         return 'There was an error'
 
